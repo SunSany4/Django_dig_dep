@@ -1,0 +1,7 @@
+<h2>Ваши текущие задачи</h2>
+<ul>
+    {% for task in tasks %}
+    <li>{{ task.title }} - {% if task.completed %} V {% else %} X {% endif %}</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'logout' %}">Выйти</a>
