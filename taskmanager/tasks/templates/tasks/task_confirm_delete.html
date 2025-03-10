@@ -1,0 +1,7 @@
+<h2> Вы уверены что хотите удалить эту задачу?</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button type="submit">Удалить</button>
+</form>
+<a href="{% url 'tasks' %}">Отмена</a>

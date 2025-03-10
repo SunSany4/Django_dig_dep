@@ -1,7 +1,17 @@
 <h2>Ваши текущие задачи</h2>
-<ul>
-    {% for task in tasks %}
-    <li>{{ task.title }} - {% if task.completed %} V {% else %} X {% endif %}</li>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="{{ message.tags }}">{{ message }}</li>
     {% endfor %}
 </ul>
+{% endif %}
+<ul>
+    {% for task in tasks %}
+    <li>{{ task.title }} - {% if task.completed %} ✔ {% else %} ❌ {% endif %}
+    <a href="{% url 'edit_task' task.id %}">✏️</a>
+    <a href="{% url 'delete_task' task.id %}">🗑️</a>
+    </li>
+    {% endfor %}
+</ul>   
 <a href="{% url 'logout' %}">Выйти</a>
