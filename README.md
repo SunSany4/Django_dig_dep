@@ -7,7 +7,7 @@
 
 Тепрь у вас есть форк репозитория Django_dig_dep, но у вас нет файлов в этом репозитории локально на вашем компьютере.
 
-На GitHub перейдите к вашему форку репозитория Spoon-Knife.
+На GitHub перейдите к вашему форку репозитория Django_dig_dep.
 
 1. Над списком файлов нажмите Код.
 ![git clone](https://docs.github.com/assets/cb-13128/mw-1440/images/help/repository/code-button.webp)
