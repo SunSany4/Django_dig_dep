@@ -1,3 +1,5 @@
+## Качаем и устанавливаем git:
+https://git-scm.com/downloads/win
 ## Делаем копию репозитория:
 1. ![fork](https://docs.github.com/assets/cb-34352/mw-1440/images/help/repository/fork-button.webp)
 2. Нажмите Create a new fork
