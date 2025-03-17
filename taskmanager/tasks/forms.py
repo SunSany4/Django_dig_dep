@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task
+from .models import Task, Category
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -13,8 +13,11 @@ class RegisterForm(UserCreationForm):
 
 
 class TaskForm(forms.ModelForm):
+    category = forms.ModelChoiceField(queryset=Category.objects.all(),
+                                      required=False,
+                                      empty_label='Категория не выбрана')
     class Meta:
         model = Task
-        fields = ['title', 'description', 'completed']
+        fields = ['title', 'description', 'completed', 'category']
 
 

@@ -1,3 +1,57 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+<!-- <script>
+    setTimeout(function(){
+        let messages = document.querySelector('.messages');
+        if (messages) {
+            messages.style.display = 'none';
+        }
+    }, 2000);
+</script> -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let messages = document.querySelectorAll('.messages li');
+        if (messages) {
+        messages.forEach(function(message) {
+            setTimeout(() => {
+                message.style.animation = 'fadeOut 0.5s ease-in-out';
+                setTimeout(() => {
+                    message.remove();
+                }, 500);
+            }, 2000);
+        })
+    }
+    })
+</script>
+
+<h2>Фильтр</h2>
+<form method="GET" action="{% url 'tasks' %}"> 
+    <label for="category">Категория:</label>
+    <select name="category" id="category">
+        <option value="">Все категории</option>
+        {% for category in categories %}
+        <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %} selected {% endif %}>
+            {{ category.name }}
+        </option>
+        {% endfor %}
+    </select>
+        <label for="status">Статус:</label>
+        <select name="status" id="status">
+            <option value="">Все</option>
+            
+            <option value="completed" {% if request.GET.status == "completed" %} selected {% endif %}>
+                Завершенные
+            </option>
+            <option value="incomplete" {% if request.GET.status == "incomplete" %} selected {% endif %}>
+                Невыполненные
+            </option>
+        </select>
+        <button type="submit">Применить</button>
+</form>
+
+
 <h2>Ваши текущие задачи</h2>
 {% if messages %}
 <ul class="messages">
@@ -9,9 +63,9 @@
 <ul>
     {% for task in tasks %}
     <li>{{ task.title }} - {% if task.completed %} ✔ {% else %} ❌ {% endif %}
-    <a href="{% url 'edit_task' task.id %}">✏️</a>
-    <a href="{% url 'delete_task' task.id %}">🗑️</a>
+        <a href="{% url 'edit_task' task.id %}">✏️</a>
+        <a href="{% url 'delete_task' task.id %}">🗑️</a>
     </li>
     {% endfor %}
-</ul>   
+</ul>
 <a href="{% url 'logout' %}">Выйти</a>

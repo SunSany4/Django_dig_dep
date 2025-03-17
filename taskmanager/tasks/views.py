@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, TaskForm
-from .models import Task    
+from .models import Task,  Category
 
 
 def register(request):
@@ -31,11 +31,24 @@ def user_logout(request):
     logout(request)
     return redirect('login')
 
-#TODO: нужно добавить кнопку создать новую задачу дописать static
+#TODO: нужно добавить кнопку создать новую задачу
 @login_required
 def tasks(request):
+    category_id = request.GET.get('category')
+    status = request.GET.get('status')
     tasks = Task.objects.filter(user=request.user)
-    return render(request, 'tasks/task_list.html', {'tasks': tasks})
+
+    if category_id:
+        tasks = tasks.filter(category_id=category_id)
+
+    if status == 'completed':
+        tasks = tasks.filter(completed=True)
+    elif status == 'incomplete':
+        tasks = tasks.filter(completed=False)
+
+    categories = Category.objects.all()
+
+    return render(request, 'tasks/task_list.html', {'tasks': tasks, 'categories': categories})
 
 @login_required
 def create_task(request):
@@ -58,7 +71,7 @@ def edit_task(request, task_id):
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Задача успешно обновлена')
+            messages.success(request, f'Задача {task.title} успешно обновлена')
             return redirect('tasks')
     else:
         form = TaskForm(instance=task)
