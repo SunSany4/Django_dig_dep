@@ -25,6 +25,9 @@
     }
     })
 </script>
+<script src="{% static 'js/script.js' %}"></script>
+
+
 
 <h2>Фильтр</h2>
 <form method="GET" action="{% url 'tasks' %}"> 
@@ -53,6 +56,7 @@
 
 
 <h2>Ваши текущие задачи</h2>
+<!-- Сообщения -->
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -60,6 +64,26 @@
     {% endfor %}
 </ul>
 {% endif %}
+<!-- <a href="{% url 'create_task' %}" class="btn-create" id="open-modal">Создать задачу ➕</a> -->
+<a href="#" class="btn-create" id="open-modal">Создать задачу ➕</a>
+<!-- Модальное окно -->
+ <div id="task-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" id="close-modal">×</span>
+        <h2>Создать задачу</h2>
+        <form method="post" id="task-form">
+            {% csrf_token %}
+            {{ form.as_p}}
+            <button type="submit">Сохранить</button>
+        </form>
+        <a href="{% url 'tasks' %}">Вернуться к списку задач</a>
+    </div>
+</div>
+
+
+
+
+<!-- Список задач -->
 <ul>
     {% for task in tasks %}
     <li>{{ task.title }} - {% if task.completed %} ✔ {% else %} ❌ {% endif %}
