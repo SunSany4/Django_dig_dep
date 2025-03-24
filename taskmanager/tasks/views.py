@@ -29,9 +29,9 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('home')
 
-#TODO: нужно добавить кнопку создать новую задачу
+#TODO: сделать кнопку админки доступной только для админов, сделать переходд после логина на домашнюю страницу
 @login_required
 def tasks(request):
     category_id = request.GET.get('category')
@@ -83,5 +83,18 @@ def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     if request.method == 'POST':
         task.delete()
-        return redirect('tasks')
+        return redirect('')
     return render(request, 'tasks/task_confirm_delete.html', {'task': task})
+
+
+def home(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('tasks')
+        else: 
+            messages.error(request, 'Неправильный логин или пароль')
+    return render(request, 'tasks/home.html')

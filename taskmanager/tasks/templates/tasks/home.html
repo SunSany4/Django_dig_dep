@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Добро пожаловать</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                let messages = document.querySelectorAll('.messages li');
+                if (messages) {
+                messages.forEach(function(message) {
+                    setTimeout(() => {
+                        message.style.animation = 'fadeOut 0.5s ease-in-out';
+                        setTimeout(() => {
+                            message.remove();
+                        }, 500);
+                    }, 2000);
+                })
+            }
+            })
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Добро пожаловать в Task Manager</h1>
+            <p>Здесь вы можете управлять своими задачами.</p>
+            {% if user.is_authenticated %}
+                <p>Вы вошли как <strong> {{ user.username }} </strong>.</p>
+                <a href="{% url 'tasks' %}" class="btn">Посмотреть задачи</a>
+                <a href="{% url 'admin:index' %}" class="btn">Войти в админку</a>
+                <a href="{% url 'logout' %}" class="btn btn-logout">Выйти</a>
+            {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                     <div class="form-group">
+                        <label for="username">Имя пользователя:</label>
+                        <input type="text" name="username" id="username" required>
+                     </div>
+                     <div class="form-group">
+                        <label for="password">Пароль:</label>
+                        <input type="password" name="password" id="password" required>
+                     </div>
+                    
+                    <button type="submit">Войти</button>
+                </form>
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            
+           <p>Еще не зарегистрированы? <a href="{% url 'register' %}">Регистрация</a></p>
+           {% endif %}
+        </div>
+    </body>
+</html>
