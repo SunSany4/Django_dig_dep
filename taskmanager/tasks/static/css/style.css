@@ -24,6 +24,15 @@ p {
     color: #666;
 }
 
+.completed {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.hidden {
+    display: none;
+}
+
 .btn {
     display: inline-block;
     background: #007bff;
@@ -49,6 +58,20 @@ p {
 
 .btn-create:hover {
     background-color: #218838;
+}
+
+.btn-delete{
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-delete:hover{
+    background-color: #a71d2a;
 }
 
 form {

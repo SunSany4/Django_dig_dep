@@ -25,7 +25,8 @@
     }
     })
 </script>
-<script src="{% static 'js/script.js' %}"></script>
+{% load static %}
+<script src="{% static 'js/sript.js' %}"></script>
 
 
 
@@ -54,6 +55,11 @@
         <button type="submit">Применить</button>
 </form>
 
+<!-- Поиск задач -->
+ <form method="get">
+    <input type="text" name="q" placeholder="Поиск задач" value="{{ query }}">
+    <button type="submit">Найти</button>
+ </form>
 
 <h2>Ваши текущие задачи</h2>
 <!-- Сообщения -->
@@ -73,7 +79,19 @@
         <h2>Создать задачу</h2>
         <form method="post" id="task-form">
             {% csrf_token %}
-            {{ form.as_p}}
+            <label for="title"> Название</label>
+            <input type="text" name="title" id="title" required>
+
+            <label for="description">Описание</label>
+            <textarea name="description" id="description"></textarea>
+
+            <label for="category">Категория</label>
+            <select name="category" id="category">
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            
             <button type="submit">Сохранить</button>
         </form>
         <a href="{% url 'tasks' %}">Вернуться к списку задач</a>
@@ -81,15 +99,70 @@
 </div>
 
 
-
-
 <!-- Список задач -->
-<ul>
-    {% for task in tasks %}
-    <li>{{ task.title }} - {% if task.completed %} ✔ {% else %} ❌ {% endif %}
-        <a href="{% url 'edit_task' task.id %}">✏️</a>
-        <a href="{% url 'delete_task' task.id %}">🗑️</a>
+<ul id="task-list">
+    {% for task in page_obj %}
+    <li class="task-item" data-task-id="{{ task.id }}" data-completed="{{ task.completed }}">
+        <strong class="task-title {% if task.completed %} completed {% endif %}"> {{ task.title }} {% if task.completed %} ✔ {% else %} ❌ {% endif %}</stron> 
+        <span class="task-desc">{{ task.description }}  </span>
+        <span class="category"> {{ task.category.name }} </span>
+        <button class="btn-edit" 
+                data-taks-id="{{ task.id }}" 
+                data-title="{{ task.title }}" 
+                data-description="{{ task.description }}" 
+                data-category="{{ task.category.id }}">✏️</button>
+        <!-- <a href="{% url 'edit_task' task.id %}">✏️</a> -->
+        <!-- <a href="{% url 'delete_task' task.id %}">🗑️</a> -->
+        <button class="btn-delete" data-task-id="{{ task.id }}">🗑️</button>
+        <button class="btn-complete {% if task.completed %}hidden{% endif %}" data-task-id="{{ task.id }}">✔ Выполнено</button>
+        <button class="btn-incomplete {% if not task.completed %}hidden{% endif %}" data-task-id="{{ task.id }}"> ❌ Невыполнено</button>
     </li>
     {% endfor %}
 </ul>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; Первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages}}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Последняя &raquo;</a>
+        {% endif %} 
+    </span>
+</div>
+
+
+<!-- Модальное окно для редактирования задачи -->
+<div id="edit-task-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" id="close-modal">×</span>
+        <h2>Редактировать задачу</h2>
+        <form id="edit-task-form">
+            {% csrf_token %}
+            <input type="hidden" id="edit-task-id">
+
+            <label for="edit-title">Название:</label>
+            <input type="text" id="edit-title" name="title" required>
+
+            <label for="edit-description">Описание:</label>
+            <textarea id="edit-description" name="description"></textarea>
+
+            <label for="edit-category">Категория:</label>
+            <select id="edit-category" name="category">
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Сохранить</button>
+        </form>
+        <a href="{% url 'tasks' %}">Вернуться к списку задач</a>
+    </div>
+</div>
 <a href="{% url 'logout' %}">Выйти</a>
