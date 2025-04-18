@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
 from .views import *
 
 urlpatterns = [
@@ -15,4 +16,7 @@ urlpatterns = [
     path('tasks/delete/<int:task_id>', delete_task, name='delete_task'),
     path('tasks/complete/<int:task_id>', completed_task_ajax, name='completed_task_ajax'),
     path('tasks/incomplete/<int:task_id>', incomplete_task_ajax, name='incomplete_task_ajax'),
+    path('api/tasks/', TaskListCreate.as_view(), name='api-task-list-create'),
+    path('api/tasks/<int:id>', TaskDetail.as_view(), name='api-task-detail'),
+    path('api/token/', obtain_auth_token, name='api-auth-token')
 ]
